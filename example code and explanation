@@ -1,0 +1,157 @@
+import os
+import zipfile
+
+# Create project directory structure
+project_root = "/mnt/data/ai_meeting_minutes_generator"
+os.makedirs(project_root, exist_ok=True)
+
+# File contents for each module
+files = {
+    "audio_handler.py": '''
+from pydub import AudioSegment
+
+def convert_to_wav(input_path, output_path="converted.wav"):
+    audio = AudioSegment.from_file(input_path)
+    audio = audio.set_channels(1).set_frame_rate(16000)
+    audio.export(output_path, format="wav")
+    return output_path
+''',
+
+    "transcription.py": '''
+import whisper
+
+def transcribe_audio(file_path, model_size="base"):
+    model = whisper.load_model(model_size)
+    print("Transcribing...")
+    result = model.transcribe(file_path)
+    return result['text'], result['segments']
+''',
+
+    "diarization.py": '''
+from pyannote.audio import Pipeline
+
+def diarize_speakers(audio_path, hf_token):
+    pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization",
+                                        use_auth_token=hf_token)
+    diarization = pipeline(audio_path)
+    segments = []
+
+    for turn, _, speaker in diarization.itertracks(yield_label=True):
+        segments.append({
+            "speaker": speaker,
+            "start": turn.start,
+            "end": turn.end
+        })
+    return segments
+''',
+
+    "merger.py": '''
+def merge_transcript(segments, speaker_data):
+    output = []
+    for seg in segments:
+        start = seg['start']
+        text = seg['text']
+        speaker = "Unknown"
+        for s in speaker_data:
+            if s['start'] <= start <= s['end']:
+                speaker = s['speaker']
+                break
+        output.append(f"{speaker}: {text}")
+    return "\\n".join(output)
+''',
+
+    "summarizer.py": '''
+from transformers import pipeline
+
+def summarize_text(text):
+    summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+    text = text.replace("\\n", " ")
+    chunks = [text[i:i+1024] for i in range(0, len(text), 1024)]
+    summary = ""
+    for chunk in chunks:
+        result = summarizer(chunk, max_length=130, min_length=30, do_sample=False)
+        summary += result[0]['summary_text'] + " "
+    return summary.strip()
+''',
+
+    "keywords.py": '''
+from keybert import KeyBERT
+
+def extract_keywords(text, top_n=10):
+    kw_model = KeyBERT()
+    keywords = kw_model.extract_keywords(text, top_n=top_n)
+    return [kw[0] for kw in keywords]
+''',
+
+    "sentiment.py": '''
+from textblob import TextBlob
+
+def analyze_sentiment(text):
+    blob = TextBlob(text)
+    return {
+        "polarity": blob.sentiment.polarity,
+        "subjectivity": blob.sentiment.subjectivity
+    }
+''',
+
+    "exporter.py": '''
+from fpdf import FPDF
+
+def export_to_pdf(transcript, summary, keywords, sentiment, output_file="minutes.pdf"):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.multi_cell(0, 10, "Meeting Transcript:\\n" + transcript[:2000])
+    pdf.ln(10)
+    pdf.multi_cell(0, 10, "Summary:\\n" + summary)
+    pdf.ln(10)
+    pdf.multi_cell(0, 10, "Keywords: " + ", ".join(keywords))
+    pdf.ln(10)
+    pdf.multi_cell(0, 10, f"Sentiment: {sentiment}")
+    
+    pdf.output(output_file)
+''',
+
+    "README.txt": '''
+AI-Powered Meeting Minutes Generator
+------------------------------------
+
+Modules:
+- audio_handler.py: Converts audio files to WAV format
+- transcription.py: Transcribes speech to text using Whisper
+- diarization.py: Performs speaker diarization with pyannote.audio
+- merger.py: Combines transcript with speaker labels
+- summarizer.py: Summarizes text using BART
+- keywords.py: Extracts keywords using KeyBERT
+- sentiment.py: Analyzes sentiment with TextBlob
+- exporter.py: Generates a PDF report
+
+Instructions:
+1. Place your meeting audio file (e.g., .mp3, .wav) in the project directory.
+2. Run convert_to_wav() to convert to 16kHz mono WAV.
+3. Use transcribe_audio() to get transcript and segments.
+4. Use diarize_speakers() with your Hugging Face token.
+5. Merge speaker labels using merge_transcript().
+6. Run summarize_text() to get the meeting summary.
+7. Extract keywords using extract_keywords().
+8. Analyze sentiment with analyze_sentiment().
+9. Generate your report using export_to_pdf().
+'''
+}
+
+# Write files to the project folder
+for filename, content in files.items():
+    with open(os.path.join(project_root, filename), "w") as f:
+        f.write(content.strip())
+
+# Zip the directory
+zip_path = "/mnt/data/ai_meeting_minutes_generator.zip"
+with zipfile.ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(project_root):
+        for filename in filenames:
+            file_path = os.path.join(foldername, filename)
+            arcname = os.path.relpath(file_path, project_root)
+            zipf.write(file_path, arcname)
+
+zip_path
