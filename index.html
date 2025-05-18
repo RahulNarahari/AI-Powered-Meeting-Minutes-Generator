@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Meeting Minutes Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .content-area {
+            transition: all 0.3s ease;
+        }
+        .wave {
+            animation: wave 8s linear infinite;
+        }
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-white w-64 border-r border-gray-200 flex flex-col">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white">
+                        <i class="fas fa-robot text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Meeting AI</h1>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <nav class="p-4">
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                                <i class="fas fa-microphone"></i>
+                                <span>Record Meeting</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Meeting Minutes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                                <i class="fas fa-tasks"></i>
+                                <span>Action Items</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                                <i class="fas fa-users"></i>
+                                <span>Participants</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">John Doe</p>
+                        <p class="text-sm text-gray-500">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-area flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold text-gray-800">Meeting Minutes Generator</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Welcome Banner -->
+                <div class="gradient-bg rounded-xl p-6 text-white mb-6 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white bg-opacity-10"></div>
+                    <div class="absolute -right-20 -bottom-20 w-60 h-60 rounded-full bg-white bg-opacity-5"></div>
+                    <div class="relative z-10">
+                        <h1 class="text-2xl font-bold mb-2">Generate Meeting Minutes Automatically</h1>
+                        <p class="mb-4">Upload your meeting recording or record directly to get AI-generated minutes with action items and summaries.</p>
+                        <div class="flex space-x-4">
+                            <button class="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition">
+                                <i class="fas fa-microphone mr-2"></i> Record Meeting
+                            </button>
+                            <button class="bg-white bg-opacity-20 px-4 py-2 rounded-lg font-medium hover:bg-opacity-30 transition">
+                                <i class="fas fa-upload mr-2"></i> Upload Recording
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Meetings Processed</p>
+                                <h3 class="text-2xl font-bold text-gray-800">1,248</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i class="fas fa-calendar-alt text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i> 12% from last month
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Action Items Identified</p>
+                                <h3 class="text-2xl font-bold text-gray-800">3,784</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                <i class="fas fa-tasks text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i> 8% from last month
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Time Saved</p>
+                                <h3 class="text-2xl font-bold text-gray-800">312 hours</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i> 15% from last month
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Meetings -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800">Recent Meetings</h3>
+                            <button class="text-blue-600 hover:text-blue-800">View All</button>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 rounded-lg gradient-bg flex items-center justify-center text-white">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-800">Quarterly Strategy Review</h4>
+                                    <p class="text-sm text-gray-500">Today, 10:00 AM - 11:30 AM</p>
+                                    <div class="mt-2 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Completed</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">5 Action Items</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <p class="text-sm text-gray-500 mt-2">92% Accuracy</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-800">Product Development</h4>
+                                    <p class="text-sm text-gray-500">Yesterday, 2:00 PM - 3:15 PM</p>
+                                    <div class="mt-2 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Completed</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">7 Action Items</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <p class="text-sm text-gray-500 mt-2">89% Accuracy</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-800">Marketing Campaign</h4>
+                                    <p class="text-sm text-gray-500">May 15, 9:30 AM - 10:45 AM</p>
+                                    <div class="mt-2 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Completed</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">4 Action Items</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <p class="text-sm text-gray-500 mt-2">94% Accuracy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Features Section -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">How It Works</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                            <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-4 mx-auto">
+                                <i class="fas fa-microphone text-2xl"></i>
+                            </div>
+                            <h4 class="text-center font-medium text-gray-800 mb-2">Record or Upload</h4>
+                            <p class="text-center text-gray-600">Record your meeting in real-time or upload an existing audio/video recording.</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                            <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-4 mx-auto">
+                                <i class="fas fa-brain text-2xl"></i>
+                            </div>
+                            <h4 class="text-center font-medium text-gray-800 mb-2">AI Processing</h4>
+                            <p class="text-center text-gray-600">Our AI transcribes, summarizes, and extracts key action items automatically.</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                            <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-4 mx-auto">
+                                <i class="fas fa-file-alt text-2xl"></i>
+                            </div>
+                            <h4 class="text-center font-medium text-gray-800 mb-2">Get Minutes</h4>
+                            <p class="text-center text-gray-600">Receive organized meeting minutes with highlights, decisions, and tasks.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800">Try Our Demo</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="flex-1">
+                                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="font-medium text-gray-800">Sample Meeting Audio</h4>
+                                        <button class="text-blue-600 hover:text-blue-800 text-sm">Use your own</button>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                        <div class="flex items-center justify-center space-x-4 mb-4">
+                                            <button class="w-12 h-12 rounded-full gradient-bg text-white flex items-center justify-center hover:opacity-90">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            <div class="flex-1">
+                                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div class="h-full gradient-bg rounded-full" style="width: 45%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center text-sm text-gray-500">
+                                            1:24 / 3:12
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-gray-800 mb-3">Transcription Preview</h4>
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200 h-48 overflow-y-auto">
+                                        <div class="space-y-4">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-700">John (10:02 AM):</p>
+                                                <p class="text-gray-600">Let's start by reviewing the Q2 results. We exceeded our revenue targets by 12%.</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-700">Sarah (10:05 AM):</p>
+                                                <p class="text-gray-600">The marketing campaign performed exceptionally well, with a 35% increase in engagement.</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-700">Mike (10:08 AM):</p>
+                                                <p class="text-gray-600">We need to allocate more resources to customer support. Response times have increased.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="bg-gray-50 rounded-lg p-4 h-full">
+                                    <h4 class="font-medium text-gray-800 mb-3">Generated Meeting Minutes</h4>
+                                    <div class="bg-white rounded-lg p-4 border border-gray-200 h-full">
+                                        <div class="mb-4">
+                                            <h5 class="font-medium text-gray-800 mb-2">Meeting Summary</h5>
+                                            <p class="text-gray-600">The team reviewed Q2 results which showed a 12% revenue exceedance. Marketing campaigns drove 35% higher engagement. Customer support needs additional resources to address increased response times.</p>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-medium text-gray-800 mb-2">Action Items</h5>
+                                            <div class="space-y-3">
+                                                <div class="flex items-start">
+                                                    <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3 mt-1 flex-shrink-0">
+                                                        <i class="fas fa-check text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-700">Allocate more resources to customer support team</p>
+                                                        <p class="text-xs text-gray-500">Assigned to: Operations | Deadline: 06/15/2023</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start">
+                                                    <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3 mt-1 flex-shrink-0">
+                                                        <i class="fas fa-check text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-700">Prepare detailed report on marketing campaign results</p>
+                                                        <p class="text-xs text-gray-500">Assigned to: Marketing | Deadline: 06/10/2023</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start">
+                                                    <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3 mt-1 flex-shrink-0">
+                                                        <i class="fas fa-check text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-700">Schedule strategy session for Q3 planning</p>
+                                                        <p class="text-xs text-gray-500">Assigned to: John | Deadline: 06/05/2023</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-100 text-center">
+                        <button class="gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">
+                            <i class="fas fa-magic mr-2"></i> Generate Your Meeting Minutes Now
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.querySelector('header button');
+            const sidebar = document.querySelector('.sidebar');
+            const contentArea = document.querySelector('.content-area');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('hidden');
+                contentArea.classList.toggle('ml-0');
+                contentArea.classList.toggle('lg:ml-64');
+            });
+            
+            // Simulate loading animation for demo
+            const demoPlayBtn = document.querySelector('.flex-1 button.w-12');
+            demoPlayBtn.addEventListener('click', function() {
+                const progressBar = document.querySelector('.flex-1 .h-2 div');
+                let width = 45;
+                
+                const interval = setInterval(() => {
+                    width += 1;
+                    progressBar.style.width = width + '%';
+                    
+                    if(width >= 100) {
+                        clearInterval(interval);
+                        // Show success message
+                        const demoSection = document.querySelector('.flex-1');
+                        const successMsg = document.createElement('div');
+                        successMsg.className = 'bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative mb-4 fade-in';
+                        successMsg.innerHTML = `
+                            <span class="block sm:inline">Meeting minutes generated successfully!</span>
+                        `;
+                        demoSection.insertBefore(successMsg, demoSection.firstChild);
+                    }
+                }, 200);
+            });
+            
+            // Add pulse animation to CTA button
+            const ctaButton = document.querySelector('.gradient-bg.text-white.px-6');
+            setInterval(() => {
+                ctaButton.classList.toggle('pulse');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
